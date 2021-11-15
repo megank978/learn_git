@@ -1,0 +1,12 @@
+---
+title: "Hw 5"
+output: word_notebook
+---
+
+
+```{r}
+plot(cars)
+```
+
+.
+
