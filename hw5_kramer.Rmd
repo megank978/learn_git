@@ -5,10 +5,8 @@ output: word_notebook
 
 
 ```{r}
-data(cars)
-plot(cars)
-head(cars)
-summary(cars)
+library(readr)
+homicides <- read_csv("data/homicide-data.csv")
 
 ```
 
