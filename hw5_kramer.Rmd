@@ -2,13 +2,56 @@
 title: "Hw 5"
 output: word_notebook
 ---
+```{r include=FALSE}
+library(tigris)
+library(tidyverse)
+library(ggplot2)
+library(stringr)
+library(broom)
+library(purrr)
+library(scales)
+library(readr)
+```
 
 
 ```{r}
-library(readr)
-homicides <- read_csv("data/homicide-data.csv")
 
+homicides <- read_csv("data/homicide-data.csv")
+ca_homi <- homicides %>%
+  filter(state == "CA") %>%
+  mutate(disposition = str_replace_all(disposition, "Open/No arrest", "unsolved"),
+         disposition = str_replace_all(disposition, "Closed without arrest", "unsolved"),
+         disposition = str_replace_all(disposition, "Closed by arrest", "solved"))
+          
+         
+         
+data("state")
+us_state_info <- data_frame(state = state.name, 
+                            area = state.area,
+                            region = state.region)  
+
+ca_counties <- counties(state = "CA", cb = TRUE, class = "sf")
+
+ca_homicides <- ca_counties %>%
+  rename(city = NAME) %>%
+  right_join(ca_homi, by = "city") %>%
+  select(city, state, victim_race, lat, lon, disposition, geometry)
 ```
 
 .
+```{r}
+ca_homicides %>%
+ggplot()+
+  geom_sf(data = ca_counties) + 
+  geom_point(data = ca_homicides, aes(x = ca_homicides$lon, y = ca_homicides$lat, color = ca_homicides$victim_race)) + 
+  facet_wrap( ~ city)
+```
+
+```{r}
+ca_homicides %>%
+  ggplot()+
+  geom_sf(data = ca_homicides) +
+  geom_point(aes(x = lat , y = lon, color = victim_race)) + 
+  facet_wrap(~city)
+```
 
