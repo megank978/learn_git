@@ -15,7 +15,7 @@ library(readr)
 
 
 ```{r}
-
+ 
 homicides <- read_csv("data/homicide-data.csv")
 ca_homi <- homicides %>%
   filter(state == "CA") %>%
@@ -26,7 +26,7 @@ ca_homi <- homicides %>%
          
          
 data("state")
-us_state_info <- data_frame(state = state.name, 
+us_state_info <- tibble(state = state.name, 
                             area = state.area,
                             region = state.region)  
 
@@ -43,7 +43,7 @@ ca_homicides <- ca_counties %>%
 ca_homicides %>%
 ggplot()+
   geom_sf(data = ca_counties) + 
-  geom_point(data = ca_homicides, aes(x = ca_homicides$lon, y = ca_homicides$lat, color = ca_homicides$victim_race)) + 
+  geom_point(data = ca_homicides, aes(x = lon, y = lat, color = ca_homicides$victim_race)) + 
   facet_wrap( ~ city)
 ```
 
