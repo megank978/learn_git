@@ -11,6 +11,8 @@ library(broom)
 library(purrr)
 library(scales)
 library(readr)
+library(forcats)
+library(viridis)
 ```
 
 
@@ -31,27 +33,26 @@ us_state_info <- tibble(state = state.name,
                             region = state.region)  
 
 ca_counties <- counties(state = "CA", cb = TRUE, class = "sf")
+la <- ca_counties %>%
+  filter(NAME == "Los Angeles")
 
-ca_homicides <- ca_counties %>%
+laca_homicides <- ca_counties %>%
   rename(city = NAME) %>%
   right_join(ca_homi, by = "city") %>%
+  filter(city == "Los Angeles") %>%
   select(city, state, victim_race, lat, lon, disposition, geometry)
 ```
 
-.
-```{r}
-ca_homicides %>%
-ggplot()+
-  geom_sf(data = ca_counties) + 
-  geom_point(data = ca_homicides, aes(x = lon, y = lat, color = ca_homicides$victim_race)) + 
-  facet_wrap( ~ city)
-```
 
 ```{r}
-ca_homicides %>%
-  ggplot()+
-  geom_sf(data = ca_homicides) +
-  geom_point(aes(x = lat , y = lon, color = victim_race)) + 
-  facet_wrap(~city)
+ggplot() +
+  geom_sf(data = la, color = "lightgray") + 
+  geom_point(data = laca_homicides, aes(x = lon, y = lat, color = victim_race)) +
+  facet_wrap( ~disposition) + 
+  fct_lump_n(~victim_race, n = 3)
+
+
 ```
+
+
 
