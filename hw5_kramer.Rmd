@@ -49,7 +49,18 @@ ggplot() +
   geom_sf(data = la, color = "lightgray") + 
   geom_point(data = laca_homicides, aes(x = lon, y = lat, color = victim_race)) +
   facet_wrap( ~disposition) + 
-  fct_lump_n(~victim_race, n = 3)
+  theme_dark() +
+  scale_colour_brewer(palette = "Set1") +
+   theme(axis.line = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+  labs(title = "Los Angeles Homicides",
+       x = "Longitude",
+       y = "Lattitude")
+  
+  
+#guides(x = guide_axis(angle = 90))
+#  fct_lump_n(~victim_race, n = 3)
 
 
 ```
