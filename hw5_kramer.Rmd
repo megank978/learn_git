@@ -33,6 +33,7 @@ us_state_info <- tibble(state = state.name,
                             region = state.region)  
 
 ca_counties <- counties(state = "CA", cb = TRUE, class = "sf")
+
 la <- ca_counties %>%
   filter(NAME == "Los Angeles")
 
