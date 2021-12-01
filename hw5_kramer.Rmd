@@ -35,20 +35,22 @@ us_state_info <- tibble(state = state.name,
 ca_counties <- counties(state = "CA", cb = TRUE, class = "sf")
 
 la <- ca_counties %>%
-  filter(NAME == "Los Angeles")
+  filter(NAME == "Los Angeles") 
+  
 
 laca_homicides <- ca_counties %>%
   rename(city = NAME) %>%
   right_join(ca_homi, by = "city") %>%
   filter(city == "Los Angeles") %>%
-  select(city, state, victim_race, lat, lon, disposition, geometry)
+  select(city, state, victim_race, lat, lon, disposition, geometry) %>%
+  mutate(top3 = fct_lump(victim_race, 3))
 ```
 
 
 ```{r}
 ggplot() +
   geom_sf(data = la, color = "lightgray") + 
-  geom_point(data = laca_homicides, aes(x = lon, y = lat, color = victim_race)) +
+  geom_point(data = laca_homicides, aes(x = lon, y = lat, color = top3)) +
   facet_wrap( ~disposition) + 
   theme_dark() +
   scale_colour_brewer(palette = "Set1") +
@@ -57,11 +59,9 @@ ggplot() +
         axis.ticks = element_blank()) +
   labs(title = "Los Angeles Homicides",
        x = "Longitude",
-       y = "Lattitude")
-  
-  
-#guides(x = guide_axis(angle = 90))
-#  fct_lump_n(~victim_race, n = 3)
+       y = "Lattitude") 
+ 
+
 
 
 ```
